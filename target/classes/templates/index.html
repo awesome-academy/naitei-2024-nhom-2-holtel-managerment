@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout-main}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/index.css">
+    <link
+            href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css"
+            rel="stylesheet"
+    />
+    <title>Homepage</title>
+</head>
+<body>
+<th:block layout:fragment="content">
+<header class="section_container header_container">
+    <div class="header_image_container">
+        <div class="header_content">
+            <h1>Enjoin Your Vacation</h1>
+            <p>Book Hotels and Relax</p>
+        </div>
+        <div class="booking_container">
+            <form>
+                <div class="form_group">
+                    <div class="input_group">
+                        <input type="text">
+                        <label>Location</label>
+                    </div>
+                    <p>Where are you going?</p>
+                </div>
+                <div class="form_group">
+                    <div class="input_group">
+                        <input type="text">
+                        <label>Check in</label>
+                    </div>
+                    <p>Add date</p>
+                </div>
+                <div class="form_group">
+                    <div class="input_group">
+                        <input type="text">
+                        <label>Check out</label>
+                    </div>
+                    <p>Add date</p>
+                </div>
+                <div class="form_group">
+                    <div class="input_group">
+                        <input type="text">
+                        <label>Guest</label>
+                    </div>
+                    <p>Add guest</p>
+                </div>
+               <Button class="btn"><i class="ri-search-line"></i></Button>
+            </form>
+        </div>
+    </div>
+</header>
+</th:block>
+</body>
+</html>

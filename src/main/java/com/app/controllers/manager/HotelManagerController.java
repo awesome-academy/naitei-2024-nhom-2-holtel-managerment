@@ -1,4 +1,4 @@
-package com.app.controllers;
+package com.app.controllers.manager;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
