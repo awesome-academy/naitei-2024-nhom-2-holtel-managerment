@@ -2,11 +2,16 @@ package com.app.services.impl;
 
 import com.app.constants.Role;
 import com.app.dtos.UserDTO;
+import com.app.dtos.UserInfoDTO;
 import com.app.dtos.UserRegistrationDTO;
+import com.app.models.Hotel;
+import com.app.repositories.HotelRepository;
 import com.app.services.UserService;
 import groovy.util.logging.Slf4j;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,6 +34,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final HotelRepository hotelRepository;
 
     @Override
     @Transactional
@@ -50,6 +56,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    @Override
+    public User findUserById(Integer id) {
+        Optional<User> optionalUser = userRepository.findById(id.longValue());
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            return user;
+        }
+        return null;
+    }
+
+    @Override
+    public Page<User> findPaginatedUsers(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 
     private User mapRegistrationDtoToUser(UserRegistrationDTO registrationDTO) {
@@ -114,4 +135,84 @@ public class UserServiceImpl implements UserService {
         );
         SecurityContextHolder.getContext().setAuthentication(newAuthentication);
     }
+
+    @Override
+    public User getCurrentUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findByEmail(username);
+    }
+
+    @Override
+    public int countUsers() {
+        return (int) userRepository.count();
+    }
+
+    @Override
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public void updateUser(Integer id, UserInfoDTO userDTO) {
+        User user = userRepository.findById(Long.valueOf(id)).orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setName(userDTO.getName());
+        user.setPhone(userDTO.getPhone());
+        user.setAddress(userDTO.getAddress());
+
+        userRepository.save(user);
+
+    }
+
+    @Override
+    public void deleteUser(Integer id) {
+        userRepository.deleteById(id.longValue());
+    }
+
+    @Override
+    public UserInfoDTO convertToDTO(User user) {
+        return UserInfoDTO.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .phone(user.getPhone())
+                .address(user.getAddress())
+                .role(user.getRole())
+                .hotelId(user.getHotel() != null ? user.getHotel().getId() : null)
+                .build();
+    }
+
+    @Override
+    public User convertToEntity(UserInfoDTO userDTO) {
+        User user = User.builder()
+                .id(userDTO.getId())
+                .name(userDTO.getName())
+                .email(userDTO.getEmail())
+                .phone(userDTO.getPhone())
+                .address(userDTO.getAddress())
+                .role(userDTO.getRole())
+                .build();
+
+        // If hotelId is set, associate the user with a hotel
+        if (userDTO.getHotelId() != null) {
+            Hotel hotel = hotelRepository.findById(userDTO.getHotelId())
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid hotel ID"));
+            user.setHotel(hotel);
+        }
+
+        return user;
+    }
+
+    @Override
+    public void saveUserInfo(UserInfoDTO userDTO) {
+
+        User user = userRepository.findById(Long.valueOf(userDTO.getId())).orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setName(userDTO.getName());
+        user.setPhone(userDTO.getPhone());
+        user.setAddress(userDTO.getAddress());
+
+        userRepository.save(user);
+    }
+
 }
