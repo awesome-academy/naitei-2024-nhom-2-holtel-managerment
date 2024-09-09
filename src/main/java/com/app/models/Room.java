@@ -20,6 +20,7 @@ public class Room {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Integer id;
 
     @ManyToOne
@@ -30,14 +31,14 @@ public class Room {
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false,name = "type")
     private RoomType type;
 
     @Column(nullable = false, precision = 10)
     private Double pricePerNight;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(nullable = false, name = "status")
     private RoomStatus status;
 
     @Column(columnDefinition = "TEXT")
