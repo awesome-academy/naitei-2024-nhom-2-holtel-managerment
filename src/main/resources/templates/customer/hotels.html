@@ -3,28 +3,103 @@
       layout:decorate="~{/layout/layout-main}">
 <head>
     <title>Homepage</title>
-    <style>
-        body {
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-        .content {
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 20px;
-            border-radius: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/customer/homepage.css">
 </head>
 <body>
 <th:block layout:fragment="content">
-    <div class="content container pt-5">
-        <div class="row justify-content-center align-items-start">
-            <div class="col-12 text-center">
-                <h1 class="display-5 mb-5"><strong>"CUSTOMER LOGIN"</strong></h1>
-                <h2 class="display-5 mb-5">Page /customer/hotels: see all hotels</h2>
+    <div class="flex-container">
+        <div class="col-2">
+            <!-- Filter Sidebar -->
+            <div class="filter-sidebar">
+                <h4>Filter Hotels</h4>
+                <form action="#" th:action="@{/hotels/filter}" method="get">
+                    <!-- Star Rating Filter -->
+                    <div class="filter-group">
+                        <label  style="font-weight: bold">Star Rating:</label>
+                        <div>
+                            <input type="checkbox" id="rating1" name="ratings" value="1">
+                            <label for="rating1">1 Star</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="rating2" name="ratings" value="2">
+                            <label for="rating2">2 Stars</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="rating3" name="ratings" value="3">
+                            <label for="rating3">3 Stars</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="rating4" name="ratings" value="4">
+                            <label for="rating4">4 Stars</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="rating5" name="ratings" value="5">
+                            <label for="rating5">5 Stars</label>
+                        </div>
+                    </div>
 
+                    <!-- Price Filter -->
+                    <div class="filter-group">
+                        <label for="minPrice" style="font-weight: bold">Price Range:</label>
+                        <input type="number" id="minPrice" name="minPrice" class="form-control" placeholder="Min Price">
+                        <div  style="padding-top: 2px">
+                            <input type="number" id="maxPrice" name="maxPrice" class="form-control" placeholder="Max Price">
+                        </div>
+                    </div>
 
+                    <!-- Submit Button -->
+                    <div class="filter-group btn-submit-box">
+                        <button type="submit" class="btn btn-primary">Apply Filters</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-9">
+            <!--Search-->
+            <div>
+                <h2 class="title1">Find a place for your vacation</h2>
+                <h3 class="title2">Search low prices on hotels, homes and much more...</h3>
+                <div class="search-bar">
+                    <form th:action="@{/customer/hotels}" method="get">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Search hotels by name" name="keyword" th:value="${keyword}">
+                            <button class="btn btn-primary" type="submit">Search</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--Grid-->
+            <div class="grid-container">
+                <div class="grid-item" th:each="hotel : ${hotels}">
+                    <div class="card-img">
+                        <img th:src="@{${hotel.imageUrl}}" alt="Hotel Image"/>
+                    </div>
+                    <div class="card-content">
+                        <h5 th:text="${hotel.name}">Hotel Name</h5>
+                        <p th:text="${hotel.location}">Hotel Location</p>
+                        <p th:text="${hotel.description}">Hotel Description</p>
+<!--                            <p>Contact: <span th:text="${hotel.contactInfo}">Hotel Contact</span></p>-->
+                    </div>
+                </div>
+            </div>
+            <!-- Pagination -->
+            <div class="pagination">
+                <ul>
+                    <li th:if="${currentPage > 0}">
+                        <a th:href="@{/customer/hotels(page=${currentPage - 1}, size=${12})}">Previous</a>
+                    </li>
+
+                    <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                        <a th:href="@{/customer/hotels(page=${i}, size=${12})}"
+                           th:text="${i + 1}"
+                           th:classappend="${i == currentPage} ? 'active' : ''"></a>
+                    </li>
+
+                    <li th:if="${currentPage < totalPages - 1}">
+                        <a th:href="@{/customer/hotels(page=${currentPage + 1}, size=${12})}">Next</a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>

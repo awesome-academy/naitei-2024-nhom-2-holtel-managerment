@@ -7,19 +7,21 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 @Controller
 public class RoomsController {
     @Autowired
     private RoomsService roomService;
-    @GetMapping("rooms/")
-    public  String index(Model model, @Param("type") String type) {
-    List<Room> list = this.roomService.getAll();
-    if (type != null ){
-        list = this.roomService.SearchByType(type);
+    @GetMapping("/rooms")
+    public  String index(Model model, @Param("keyword") String keyword) {
+    List<Room> rooms = this.roomService.getAll();
+    if (keyword != null && !keyword.isEmpty()) {
+        rooms = this.roomService.SearchByString(keyword);
     }
-    model.addAttribute("SearchRoom", list);
+
+    model.addAttribute("room", rooms);
     return "index";
 }
 }

@@ -2,10 +2,7 @@ package com.app.models;
 
 import com.app.constants.PaymentStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -15,10 +12,17 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
+@SequenceGenerator(
+        name = "payment_seq",
+        sequenceName = "id",
+        allocationSize = 1
+)
+
 public class Payment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "payment_seq")
     private Integer id;
 
     @ManyToOne
