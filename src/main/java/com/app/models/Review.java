@@ -1,10 +1,7 @@
 package com.app.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -14,10 +11,17 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
+@SequenceGenerator(
+        name = "review_seq",
+        sequenceName = "id",
+        allocationSize = 1
+)
+
 public class Review {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "review_seq")
     private Integer id;
 
     @ManyToOne

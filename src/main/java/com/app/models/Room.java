@@ -3,10 +3,7 @@ package com.app.models;
 import com.app.constants.RoomStatus;
 import com.app.constants.RoomType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
@@ -16,11 +13,18 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
+@SequenceGenerator(
+        name = "room_seq",
+        sequenceName = "id",
+        allocationSize = 1
+)
+
 public class Room {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "room_seq")
     private Integer id;
 
     @ManyToOne

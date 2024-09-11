@@ -2,10 +2,7 @@ package com.app.models;
 
 import com.app.constants.BookingStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,10 +14,17 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
+@SequenceGenerator(
+        name = "booking_seq",
+        sequenceName = "id",
+        allocationSize = 1
+)
+
 public class Booking {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "booking_seq")
     private Integer id;
 
     @ManyToOne

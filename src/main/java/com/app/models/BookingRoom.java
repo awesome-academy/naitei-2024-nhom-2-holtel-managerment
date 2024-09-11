@@ -1,10 +1,7 @@
 package com.app.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "BOOKING_ROOMS")
@@ -12,10 +9,17 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
+@SequenceGenerator(
+        name = "bookingroom_seq",
+        sequenceName = "id",
+        allocationSize = 1
+)
+
 public class BookingRoom {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bookingroom_seq")
     private Integer id;
 
     @ManyToOne

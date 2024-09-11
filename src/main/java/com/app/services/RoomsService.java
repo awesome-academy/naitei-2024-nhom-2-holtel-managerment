@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface RoomsService {
     List<Room> getAll();
-    List<Room> SearchByType(String type);
+    List<Room> SearchByString(String type);
 }

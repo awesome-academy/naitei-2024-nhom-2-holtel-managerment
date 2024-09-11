@@ -32,8 +32,13 @@
                 </li>
                 <!-- Customer -->
                 <li class="nav-item" sec:authorize="hasRole('ROLE_CUSTOMER')">
-                    <a class="nav-link" th:href="@{/customer/hotels}">Rooms</a>
+                    <a class="nav-link" th:href="@{/customer/hotels}">Hotels</a>
                 </li>
+                <li class="nav-item" sec:authorize="hasRole('ROLE_CUSTOMER')">
+                    <a class="nav-link" th:href="@{/customer/profile}">My Account</a>
+                </li>
+
+                <!--Hotel Staff-->
                 <li class="nav-item" sec:authorize="hasRole('ROLE_HOTEL_STAFF')">
                     <a class="nav-link" th:href="@{/manager/dashboard}">Dashboard</a>
                 </li>
