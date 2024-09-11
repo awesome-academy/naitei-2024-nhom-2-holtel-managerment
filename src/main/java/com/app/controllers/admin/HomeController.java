@@ -1,8 +1,8 @@
 package com.app.controllers.admin;
 
-import com.app.services.BookingService;
-import com.app.services.HotelService;
-import com.app.services.UserService;
+import com.app.services.BookingsService;
+import com.app.services.HotelsService;
+import com.app.services.UsersService;
 import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,17 +18,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class HomeController {
 
     @Autowired
-    BookingService bookingService;
+    BookingsService bookingsService;
     @Autowired
-    UserService userService;
+    UsersService usersService;
     @Autowired
-    HotelService hotelService;
+    HotelsService hotelsService;
     @GetMapping("/dashboard")
     public String showDashboard(Model model){
         // Retrieve counts from the service layer
-        int bookingCount = bookingService.countBookings();
-        int hotelCount = hotelService.countHotels();
-        int userCount = userService.countUsers();
+        int bookingCount = bookingsService.countBookings();
+        int hotelCount = hotelsService.countHotels();
+        int userCount = usersService.countUsers();
 
         // Add attributes to the model to be used in the Thymeleaf template
         model.addAttribute("bookingCount", bookingCount);

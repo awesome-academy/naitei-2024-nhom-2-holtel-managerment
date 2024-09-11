@@ -3,9 +3,8 @@ package com.app.controllers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.security.core.Authentication;
-import com.app.services.UserService;
+import com.app.services.UsersService;
 import com.app.dtos.UserRegistrationDTO;
 import com.app.exceptions.UsernameAlreadyExistsException;
 import com.app.security.RedirectUtil;
@@ -16,7 +15,7 @@ import org.springframework.validation.BindingResult;
 @RequiredArgsConstructor
 @Slf4j
 public class BaseController {
-    protected final UserService userService;
+    protected final UsersService usersService;
 
     protected String registerUser(@Valid UserRegistrationDTO registrationDTO, BindingResult result, String view, String redirectUrl) {
         if (result.hasErrors()) {
@@ -24,7 +23,7 @@ public class BaseController {
         }
         try {
             log.info("Registering user: {}", registrationDTO.getEmail());
-            userService.saveUser(registrationDTO);
+            usersService.saveUser(registrationDTO);
         } catch (UsernameAlreadyExistsException e) {
             result.rejectValue("email", "user.exists", e.getMessage());
             return view;

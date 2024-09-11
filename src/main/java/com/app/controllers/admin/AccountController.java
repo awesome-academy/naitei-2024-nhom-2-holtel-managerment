@@ -3,7 +3,7 @@ package com.app.controllers.admin;
 import com.app.dtos.UserInfoDTO;
 import com.app.dtos.UserRegistrationDTO;
 import com.app.models.User;
-import com.app.services.UserService;
+import com.app.services.UsersService;
 import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ import java.util.stream.IntStream;
 public class AccountController {
 
     @Autowired
-    UserService userService;
+    UsersService usersService;
 
     @GetMapping
     public String index(Model model,
@@ -37,7 +37,7 @@ public class AccountController {
         int pageSize = size.orElse(5);
 
         Pageable pageable = PageRequest.of(currentPage - 1, pageSize);
-        Page<User> userPage = userService.findPaginatedUsers(pageable);
+        Page<User> userPage = usersService.findPaginatedUsers(pageable);
         int totalPages = userPage.getTotalPages();
         model.addAttribute("userPage", userPage);
         if (totalPages > 0) {
@@ -58,28 +58,28 @@ public class AccountController {
 
     @PostMapping("/")
     public String saveUser(@ModelAttribute("userDTO") UserRegistrationDTO userDTO, RedirectAttributes redirectAttributes) {
-        userService.saveUser(userDTO);
+        usersService.saveUser(userDTO);
         redirectAttributes.addFlashAttribute("message", "User created successfully!");
         return "redirect:/admin/users";
     }
 
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable("id") Integer id, Model model) {
-        User user = userService.findUserById(id);
-        model.addAttribute("userDTO", userService.convertToDTO(user));
+        User user = usersService.findUserById(id);
+        model.addAttribute("userDTO", usersService.convertToDTO(user));
         return "admin/users/edit-user";
     }
 
     @PatchMapping("/{id}/update")
     public String updateUser(@PathVariable("id") Integer id, @ModelAttribute("userDTO") UserInfoDTO userDTO, RedirectAttributes redirectAttributes) {
-        userService.updateUser(id, userDTO);
+        usersService.updateUser(id, userDTO);
         redirectAttributes.addFlashAttribute("message", "User updated successfully!");
         return "redirect:/admin/users";
     }
 
     @DeleteMapping("/{id}")
     public String deleteUser(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
-        userService.deleteUser(id);
+        usersService.deleteUser(id);
         redirectAttributes.addFlashAttribute("message", "User deleted successfully!");
         return "redirect:/admin/users";
     }

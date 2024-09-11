@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/layout/layout-main}">
+<head>
+    <title>Bookings Management</title>
+    <link rel="stylesheet" href="/css/all.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/admin/users-index.css">
+    <script src="/js/jquery-3.5.1.slim.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/users-index.js"></script>
+</head>
+<body onload="close_notify()">
+<th:block layout:fragment="content">
+    <div class="content container pt-5">
+        <div class="row justify-content-center align-items-start">
+            <div class="col-12 text-center">
+                <h1 class="display-5 mb-5"><strong>BOOKINGS MANAGEMENT</strong></h1>
+
+                <!-- Button to add a new booking and refresh -->
+                <div class="text-left mb-3">
+                    <a href="/manager/bookings/new" class="btn btn-primary btn-action" id="add-booking">Add New Booking</a>
+                    <a href="/manager/bookings" class="btn btn-secondary" id="refresh">Refresh</a>
+                </div>
+                <div class="notification" th:if="${message}">
+                    <div class="message" th:text="${message}"></div>
+                    <span class="close-btn">&times;</span>
+                </div>
+
+                <!-- Bookings Table -->
+                <table class="table table-bordered">
+                    <thead class="table-header">
+                    <tr>
+                        <th>Customer ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Check-in Date</th>
+                        <th>Check-out Date</th>
+                        <th>Status</th>
+                        <th>Total Amount</th>
+                        <th class="actions">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="booking : ${bookingPage.content}">
+                        <td th:text="${booking.customer.id}">1</td>
+                        <td th:text="${booking.name}">John Doe</td>
+                        <td th:text="${booking.email}">john@example.com</td>
+                        <td th:text="${booking.phone}">+123456789</td>
+                        <td th:text="${booking.checkinDate}">2024-09-10</td>
+                        <td th:text="${booking.checkoutDate}">2024-09-15</td>
+                        <td th:text="${booking.status}">CONFIRMED</td>
+                        <td th:text="${booking.totalAmount}">100.00</td>
+                        <td>
+                            <div style="display: flex; gap: 10px;">
+                                <a th:href="@{/manager/bookings/{id}/edit(id=${booking.id})}"
+                                   class="btn btn-warning btn-sm btn-action">Edit</a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center pagination-sm">
+                            <li th:if="${bookingPage.totalPages > 0}" class="page-link"
+                                th:each="pageNumber : ${pageNumbers}">
+                                <a th:href="@{/manager/bookings(size=${bookingPage.size}, page=${pageNumber})}"
+                                   th:text="${pageNumber}"
+                                   th:class="${pageNumber==bookingPage.number + 1} ? 'active' : ''"
+                                   class="page-link"></a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</th:block>
+</body>
+</html>

@@ -6,7 +6,7 @@ import com.app.dtos.UserInfoDTO;
 import com.app.dtos.UserRegistrationDTO;
 import com.app.models.Hotel;
 import com.app.repositories.HotelRepository;
-import com.app.services.UserService;
+import com.app.services.UsersService;
 import groovy.util.logging.Slf4j;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserServiceImpl implements UserService {
+public class UsersServiceImpl implements UsersService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final HotelRepository hotelRepository;
@@ -213,6 +213,11 @@ public class UserServiceImpl implements UserService {
         user.setAddress(userDTO.getAddress());
 
         userRepository.save(user);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
 }
