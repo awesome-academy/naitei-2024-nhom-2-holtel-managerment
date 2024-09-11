@@ -3,7 +3,6 @@ package com.app.models;
 import com.app.constants.BookingStatus;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -14,6 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
+@Data
 @Builder
 @SequenceGenerator(
         name = "booking_seq",

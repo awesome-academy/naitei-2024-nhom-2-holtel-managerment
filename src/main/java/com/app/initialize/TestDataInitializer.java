@@ -1,5 +1,7 @@
 package com.app.initialize;
 
+import com.app.models.*;
+import com.app.constants.*;
 import com.app.repositories.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -8,18 +10,20 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import com.app.constants.Role;
-import com.app.models.*;
-import com.app.constants.*;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 import java.time.LocalDateTime;
+
 
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class TestDataInitializer implements CommandLineRunner {
+
     private final PasswordEncoder passwordEncoder;
     private final BookingRepository bookingRepository;
     private final BookingRoomRepository bookingRoomRepository;
@@ -32,7 +36,6 @@ public class TestDataInitializer implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) {
-
         try {
             log.warn("Checking if test data persistence is required...");
 
@@ -47,6 +50,7 @@ public class TestDataInitializer implements CommandLineRunner {
                 User user6 = User.builder().email("manager2@hotel.com").password(passwordEncoder.encode("123456")).name("Max").role(Role.valueOf("HOTEL_STAFF")).build();
                 User user7 = User.builder().email("manager3@hotel.com").password(passwordEncoder.encode("123456")).name("Taylor").role(Role.valueOf("HOTEL_STAFF")).build();
 
+                log.debug("Saving users...");
                 userRepository.save(user1);
                 userRepository.save(user2);
                 userRepository.save(user3);
@@ -474,9 +478,36 @@ public class TestDataInitializer implements CommandLineRunner {
             }
             log.warn("App ready");
         } catch (DataAccessException e) {
-            log.error("Exception occurred during data persistence: " + e.getMessage());
+            log.error("Exception occurred during data persistence: " + e.getMessage(), e);
         } catch (Exception e) {
-            log.error("Unexpected exception occurred: " + e.getMessage());
+            log.error("Unexpected exception occurred: " + e.getMessage(), e);
         }
+    }
+
+    private void createSampleBookings(User customer) {
+        List<String> statuses = Arrays.asList("PENDING", "CONFIRMED", "CANCELLED");
+        Random random = new Random();
+
+        log.debug("Creating bookings for customer: {}", customer.getEmail());
+        for (int i = 1; i <= 10; i++) {
+            LocalDate checkinDate = LocalDate.now().plusDays(random.nextInt(30));
+            LocalDate checkoutDate = checkinDate.plusDays(random.nextInt(5) + 1); // Random stay between 1 and 5 days
+
+            Booking booking = Booking.builder()
+                    .customer(customer) // Assigning the customer from the sample user
+                    .name("Booking " + i)
+                    .email("customer" + i + "@hotel.com")
+                    .phone("+12345678" + i)
+                    .address("Address " + i)
+                    .checkinDate(checkinDate)
+                    .checkoutDate(checkoutDate)
+                    .status(BookingStatus.valueOf(statuses.get(random.nextInt(statuses.size()))))
+                    .totalAmount(100.0 + random.nextInt(500)) // Random amount between 100 and 600
+                    .build();
+
+            log.debug("Saving booking: {}", booking);
+            bookingRepository.save(booking);
+        }
+        log.debug("All bookings saved successfully.");
     }
 }
